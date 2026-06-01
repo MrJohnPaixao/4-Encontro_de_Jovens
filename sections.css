@@ -314,3 +314,95 @@
 .foot .seal small{ display:block; font-size:.64rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-top:.3rem; }
 .foot-bottom{ margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid color-mix(in oklab,var(--paper) 8%, transparent);
   display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; font-size:.76rem; color:var(--muted); letter-spacing:.04em; }
+
+@media (max-width:760px){
+  .nav{ padding:.78rem 1rem; gap:.8rem; }
+  .brand{ min-width:0; }
+  .brand b{ font-size:1rem; }
+  .brand span{ letter-spacing:.18em; }
+  .brand span span{ display:none; }
+  .nav-links{ gap:.7rem; }
+  .nav .btn{ padding:.64em 1em; font-size:.74rem; letter-spacing:.08em; white-space:nowrap; }
+
+  .hero{ min-height:auto; justify-content:flex-start; padding:5.8rem 0 2.4rem; }
+  .hero-top{ margin-bottom:1.1rem; gap:.7rem; flex-wrap:wrap; }
+  .hero-badge{ font-size:.66rem; padding:.45em .9em; letter-spacing:.2em; }
+  .hero-sub{ font-size:.68rem; letter-spacing:.18em; }
+  .hero-title .num{ font-size:clamp(6.2rem,32vw,8.8rem); }
+  .hero-title .deg{ font-size:clamp(2rem,8vw,2.8rem); }
+  .hero-title .word{ font-size:clamp(2.3rem,13vw,4rem); }
+  .hero-title .jovens{ font-size:clamp(3.1rem,17vw,5.2rem); }
+  .hero-meta{ gap:.9rem; margin-top:1.35rem; padding-top:1.2rem; }
+  .hero-meta .item{ width:calc(50% - .45rem); gap:.6rem; }
+  .hero-meta .ic{ width:38px; height:38px; border-radius:10px; }
+  .hero-meta .k{ font-size:.58rem; letter-spacing:.18em; }
+  .hero-meta .v{ font-size:.92rem; line-height:1.2; }
+  .countdown{ gap:.45rem; }
+  .cd-cell{ padding:.55rem .35rem; border-radius:11px; }
+  .cd-cell .n{ font-size:1.45rem; }
+  .cd-cell .l{ font-size:.52rem; letter-spacing:.12em; }
+  .hero-cta{ margin-top:1.25rem; gap:.65rem; }
+  .hero-cta .btn{ flex:1 1 auto; justify-content:center; padding:.82em 1em; font-size:.88rem; }
+  .scroll-cue{ display:none; }
+
+  .marquee{ padding:.72rem 0; }
+  .marquee-track span{ font-size:1.05rem; gap:1.8rem; }
+
+  .theme,.feat,.team,.local-cta{ padding:3rem 0; }
+  .theme-grid{ gap:1.5rem; }
+  .theme h2,.sec-head h2,.info-main h2{ font-size:clamp(2.2rem,12vw,3.4rem); }
+  .theme .ref{ font-size:1.35rem; }
+  .verse-card{ padding:1.25rem; border-radius:16px; }
+  .verse-card .flame{ width:46px; height:46px; margin-bottom:.9rem; font-size:1.35rem; }
+  .verse-card p{ font-size:1.1rem; }
+  .verse-card .src{ font-size:.62rem; letter-spacing:.16em; }
+  .theme-art{ aspect-ratio:16/11; border-radius:18px; }
+  .pillars{ grid-template-columns:1fr 1fr; margin-top:1.5rem; border-radius:14px; }
+  .pillar{ padding:1rem; }
+  .pillar h3{ font-size:1.25rem; margin:.35rem 0 .25rem; }
+  .pillar p{ font-size:.8rem; line-height:1.35; }
+
+  .sec-head{ gap:.8rem; margin-bottom:1.5rem; }
+  .sec-head p{ font-size:.92rem; }
+  .star{ min-height:390px; border-radius:18px; }
+  .star .photo{ height:88%; }
+  .star .info{ padding:1.35rem; }
+  .star .tag{ top:1rem; left:1rem; font-size:.56rem; letter-spacing:.18em; }
+  .star h3{ font-size:2rem; }
+
+  .pastor-card{ min-height:0; border-radius:18px; }
+  .pastor-card__photo{ max-height:330px; }
+  .pastor-card__body{ padding:1.35rem; gap:1rem; }
+  .pastor-card__seal img{ width:54px !important; height:54px !important; }
+  .role-badge{ font-size:.6rem; letter-spacing:.18em; }
+  .pastor-card__church{ font-size:.66rem; letter-spacing:.1em; }
+  .couples{ gap:1rem; }
+  .couple{ min-height:340px; border-radius:18px; }
+  .couple img{ height:88%; }
+  .couple .info{ padding:1.25rem; }
+
+  .info-card{ border-radius:18px; }
+  .info-main,.info-side{ padding:1.45rem; }
+  .info-rows{ gap:.9rem; margin:1.25rem 0; }
+  .info-row{ gap:.75rem; }
+  .info-row .ic{ width:40px; height:40px; border-radius:11px; }
+  .info-row .k{ font-size:.58rem; letter-spacing:.16em; }
+  .info-row .v{ font-size:.95rem; line-height:1.3; }
+  .info-side{ gap:1rem; }
+  .info-side .big{ font-size:3.1rem; }
+  .info-side .lbl{ font-size:.62rem; letter-spacing:.18em; }
+
+  .foot{ padding:2.3rem 0 1.8rem; }
+  .foot-top{ gap:1.2rem; }
+  .foot .seal img{ width:62px !important; height:62px !important; margin-inline:auto; }
+  .foot-bottom{ margin-top:1.5rem; padding-top:1rem; }
+}
+
+@media (max-width:430px){
+  .wrap{ width:min(94%, var(--maxw)); }
+  .hero-meta .item{ width:100%; }
+  .hero-cta .btn{ flex-basis:100%; }
+  .pillars{ grid-template-columns:1fr; }
+  .star{ min-height:350px; }
+  .couple{ min-height:310px; }
+}
