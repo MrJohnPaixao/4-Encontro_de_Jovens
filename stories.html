@@ -239,7 +239,11 @@ body{ position:fixed; inset:0; }
 
 #story-actions{
   position:absolute; left:64px; right:64px; bottom:72px; z-index:85;
-  display:flex; gap:18px;
+  display:flex; gap:18px; opacity:0; pointer-events:none; transform:translateY(24px);
+  transition:opacity .28s var(--ease), transform .28s var(--ease);
+}
+#story-actions.show{
+  opacity:1; pointer-events:auto; transform:none;
 }
 .story-action{
   flex:1; border:0; border-radius:999px; padding:24px 28px;
@@ -265,8 +269,8 @@ body{ position:fixed; inset:0; }
     </div>
 
     <!-- Tap zones -->
-    <div id="tap-prev" onclick="prev()"></div>
-    <div id="tap-next" onclick="advance()"></div>
+    <div id="tap-prev" onclick="handlePrevTap(event)"></div>
+    <div id="tap-next" onclick="handleNextTap(event)"></div>
 
     <!-- ══ SLIDE 1 — HERO ══ -->
     <div class="slide active" id="s0">
@@ -404,7 +408,7 @@ body{ position:fixed; inset:0; }
       <div class="dot-i" data-i="2"></div>
     </div>
 
-    <div id="story-actions">
+    <div id="story-actions" aria-hidden="true">
       <button class="story-action primary" type="button" onclick="shareStory(event)">Compartilhar PNG</button>
       <button class="story-action ghost" type="button" onclick="downloadStory(event)">Baixar</button>
     </div>
@@ -431,11 +435,43 @@ document.addEventListener('DOMContentLoaded', function retry(){
 });
 
 // ── State ──
-const N = 3; let cur = 0, rafId, progStart;
+const N = 3; let cur = 0, rafId, progStart, actionsTimer;
 const SLIDE_MS = 7000;
+const storyActions = document.getElementById('story-actions');
+
+function setStoryActions(show){
+  if(!storyActions) return;
+  storyActions.classList.toggle('show', show);
+  storyActions.setAttribute('aria-hidden', show ? 'false' : 'true');
+}
+
+function revealStoryActions(){
+  setStoryActions(true);
+  clearTimeout(actionsTimer);
+  actionsTimer = setTimeout(()=>setStoryActions(false), 3600);
+}
+
+function handlePrevTap(e){
+  if(e) e.stopPropagation();
+  if(!storyActions?.classList.contains('show')){ revealStoryActions(); return; }
+  prev();
+  revealStoryActions();
+}
+
+function handleNextTap(e){
+  if(e) e.stopPropagation();
+  if(!storyActions?.classList.contains('show')){ revealStoryActions(); return; }
+  advance();
+  revealStoryActions();
+}
+
+storyActions?.addEventListener('pointerdown', e=>e.stopPropagation());
+storyActions?.addEventListener('click', e=>e.stopPropagation());
 
 function showSlide(n){
   cur = ((n % N) + N) % N;
+  setStoryActions(false);
+  clearTimeout(actionsTimer);
   document.querySelectorAll('.slide').forEach((el,i)=> el.classList.toggle('active', i===cur));
   document.querySelectorAll('.dot-i').forEach((el,i)=> el.classList.toggle('on', i===cur));
   document.querySelectorAll('.pb').forEach((el,i)=>{
