@@ -162,16 +162,20 @@
           <span>Registros</span>
           <strong>Juventude IEADM</strong>
         </div>
-        <div class="gallery-track">
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.40.jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.41.jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.42 (1).jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.42 (2).jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.42.jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.43 (1).jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.43.jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.44.jpeg" alt="Registro do Encontro de Jovens"></figure>
-          <figure class="gallery-photo"><img src="carrocel/WhatsApp Image 2026-05-31 at 23.27.46.jpeg" alt="Registro do Encontro de Jovens"></figure>
+        <div class="gallery-shell">
+          <button class="gallery-nav prev" type="button" aria-label="Foto anterior">‹</button>
+          <div class="gallery-track" id="galleryTrack">
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.40.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.41.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.42%20(1).jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.42%20(2).jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.42.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.43%20(1).jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.43.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.44.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+            <figure class="gallery-photo"><button type="button"><img src="carrocel/WhatsApp%20Image%202026-05-31%20at%2023.27.46.jpeg" alt="Registro do Encontro de Jovens"></button></figure>
+          </div>
+          <button class="gallery-nav next" type="button" aria-label="Próxima foto">›</button>
         </div>
       </div>
     </div>
@@ -343,6 +347,11 @@
   </div>
 </footer>
 
+<div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" aria-label="Fechar foto">×</button>
+  <img src="" alt="Registro ampliado do Encontro de Jovens">
+</div>
+
 <!-- ============ TWEAKS ISLAND ============ -->
 <div id="tweaks-root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
@@ -393,6 +402,47 @@
     set('cd-days-big', d);
   }
   tick(); setInterval(tick, 1000);
+
+  // automatic photo carousel with manual navigation and full-screen preview
+  const gallery = document.getElementById('galleryTrack');
+  const lightbox = document.getElementById('photoLightbox');
+  if(gallery){
+    const photos = Array.from(gallery.querySelectorAll('.gallery-photo'));
+    let galleryIndex = 0;
+    let galleryTimer;
+    const goGallery = (dir = 1) => {
+      galleryIndex = (galleryIndex + dir + photos.length) % photos.length;
+      photos[galleryIndex].scrollIntoView({behavior:'smooth', block:'nearest', inline:'start'});
+    };
+    const startGallery = () => {
+      clearInterval(galleryTimer);
+      galleryTimer = setInterval(()=>goGallery(1), 3200);
+    };
+    const stopGallery = () => clearInterval(galleryTimer);
+    document.querySelector('.gallery-nav.prev')?.addEventListener('click', () => { stopGallery(); goGallery(-1); startGallery(); });
+    document.querySelector('.gallery-nav.next')?.addEventListener('click', () => { stopGallery(); goGallery(1); startGallery(); });
+    gallery.addEventListener('pointerdown', stopGallery);
+    gallery.addEventListener('pointerup', startGallery);
+    gallery.addEventListener('mouseenter', stopGallery);
+    gallery.addEventListener('mouseleave', startGallery);
+    gallery.querySelectorAll('img').forEach((img) => {
+      img.addEventListener('click', () => {
+        stopGallery();
+        const boxImg = lightbox?.querySelector('img');
+        if(boxImg && lightbox){
+          boxImg.src = img.currentSrc || img.src;
+          lightbox.classList.add('open');
+          lightbox.setAttribute('aria-hidden','false');
+        }
+      });
+    });
+    lightbox?.addEventListener('click', () => {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden','true');
+      startGallery();
+    });
+    startGallery();
+  }
 })();
 </script>
 </body>

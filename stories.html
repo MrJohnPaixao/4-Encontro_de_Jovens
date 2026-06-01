@@ -17,17 +17,21 @@
   --D:'Anton',sans-serif; --S:'Kaushan Script',cursive; --U:'Space Grotesk',sans-serif;
 }
 html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color:var(--paper); overflow:hidden; touch-action:none; -webkit-font-smoothing:antialiased; }
+body{ position:fixed; inset:0; }
 
 /* ── STAGE: fills full viewport ── */
 #stage{
   position:fixed; inset:0;
   display:flex; align-items:center; justify-content:center;
   background:#000;
+  height:100svh;
+  height:100dvh;
+  overflow:hidden;
 }
 
 /* ── CARD: 1080×1920 scaled to fit ── */
 #card{
-  position:relative;
+  position:absolute; left:50%; top:50%;
   width:1080px; height:1920px;
   transform-origin:center center;
   overflow:hidden; border-radius:0;
@@ -233,6 +237,19 @@ html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color
 .dot-i{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.25); transition:background .3s, transform .3s; }
 .dot-i.on{ background:var(--cyan); transform:scale(1.25); box-shadow:0 0 10px var(--cyan); }
 
+#story-actions{
+  position:absolute; left:64px; right:64px; bottom:72px; z-index:85;
+  display:flex; gap:18px;
+}
+.story-action{
+  flex:1; border:0; border-radius:999px; padding:24px 28px;
+  font-family:var(--U); font-size:30px; font-weight:800; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:.55em;
+  -webkit-tap-highlight-color:transparent;
+}
+.story-action.primary{ background:linear-gradient(180deg,var(--flame2),var(--flame)); color:#2a1500; }
+.story-action.ghost{ background:rgba(244,251,249,.1); color:var(--paper); border:2px solid rgba(244,251,249,.25); }
+
 @media(prefers-reduced-motion:reduce){ .fi,.s1-n,.s1-deg,.s1-enc,.s1-jov{ animation:none!important; opacity:1!important; transform:none!important; } }
 </style>
 </head>
@@ -370,7 +387,7 @@ html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color
             <div><div class="s3-k">Igreja</div><div class="s3-v">Assembleia de Deus da Missão</div></div>
           </div>
         </div>
-        <div class="s3-share fi d5">
+        <div class="s3-share fi d5" hidden>
           <button class="s-btn primary" onclick="shareStory(event)">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
             Compartilhar
@@ -387,20 +404,26 @@ html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color
       <div class="dot-i" data-i="2"></div>
     </div>
 
+    <div id="story-actions">
+      <button class="story-action primary" type="button" onclick="shareStory(event)">Compartilhar PNG</button>
+      <button class="story-action ghost" type="button" onclick="downloadStory(event)">Baixar</button>
+    </div>
+
   </div><!-- /card -->
 </div><!-- /stage -->
 
 <script>
 // ── Scale: fill full viewport ──
 function scale(){
-  if(!window.innerWidth || !window.innerHeight) return;
+  const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+  const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  if(!vw || !vh) return;
   const c = document.getElementById('card');
-  const s = Math.min(window.innerWidth/1080, window.innerHeight/1920);
-  c.style.transform = `scale(${s})`;
-  c.style.marginTop    = `-${1920*(1-s)/2}px`;
-  c.style.marginBottom = `-${1920*(1-s)/2}px`;
+  const s = Math.min(vw/1080, vh/1920);
+  c.style.transform = `translate(-50%, -50%) scale(${s})`;
 }
 window.addEventListener('resize', scale);
+if(window.visualViewport){ window.visualViewport.addEventListener('resize', scale); }
 window.addEventListener('load', scale);
 document.addEventListener('DOMContentLoaded', function retry(){
   if(window.innerWidth > 0 && window.innerHeight > 0){ scale(); }
@@ -466,6 +489,49 @@ async function shareStory(e){ if(e){e.stopPropagation();cancelAnimationFrame(raf
   startProgress();
 }
 function goToMain(e){ if(e)e.stopPropagation(); window.open('index.html','_blank'); }
+
+const storyFiles = ['assets/stories/story-1.png','assets/stories/story-2.png','assets/stories/story-3.png'];
+
+async function currentStoryFile(){
+  const url = storyFiles[cur] || storyFiles[0];
+  const res = await fetch(url, {cache:'no-store'});
+  const blob = await res.blob();
+  return new File([blob], `4-encontro-story-${cur + 1}.png`, {type:'image/png'});
+}
+
+function downloadUrl(url){
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `4-encontro-story-${cur + 1}.png`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function shareStory(e){
+  if(e){ e.stopPropagation(); cancelAnimationFrame(rafId); }
+  try{
+    const file = await currentStoryFile();
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        title:'4° Encontro de Jovens',
+        text:'Santificai-vos na Palavra - João 17:17',
+        files:[file]
+      });
+    }else{
+      downloadUrl(storyFiles[cur] || storyFiles[0]);
+    }
+  }catch(_){
+    downloadUrl(storyFiles[cur] || storyFiles[0]);
+  }
+  startProgress();
+}
+
+function downloadStory(e){
+  if(e){ e.stopPropagation(); cancelAnimationFrame(rafId); }
+  downloadUrl(storyFiles[cur] || storyFiles[0]);
+  startProgress();
+}
 </script>
 </body>
 </html>
