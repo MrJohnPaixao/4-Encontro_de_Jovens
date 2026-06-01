@@ -166,6 +166,29 @@
 .theme-art{ position:relative; border-radius:24px; overflow:hidden; aspect-ratio:3/4;
   border:1px solid color-mix(in oklab,var(--tw-cyan) 22%, transparent); }
 .theme-art img{ width:100%; height:100%; object-fit:cover; }
+.event-gallery{
+  position:relative; z-index:2; min-width:0; border-radius:24px; overflow:hidden;
+  padding:1rem; background:color-mix(in oklab,var(--ink) 56%, transparent);
+  border:1px solid color-mix(in oklab,var(--tw-cyan) 22%, transparent);
+  box-shadow:0 34px 70px -48px #000;
+}
+.gallery-head{
+  display:flex; align-items:flex-end; justify-content:space-between; gap:1rem;
+  padding:.35rem .45rem 1rem; border-bottom:1px solid color-mix(in oklab,var(--tw-cyan) 14%, transparent);
+}
+.gallery-head span{ font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; color:var(--tw-flame); font-weight:700; }
+.gallery-head strong{ font-family:var(--display); font-size:clamp(1.25rem,2.4vw,2rem); line-height:1; text-transform:uppercase; font-weight:400; color:var(--paper); }
+.gallery-track{
+  display:grid; grid-auto-flow:column; grid-auto-columns:minmax(220px,62%);
+  gap:.9rem; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:inline mandatory;
+  padding:1rem .2rem .35rem; scrollbar-width:thin; scrollbar-color:var(--tw-cyan) transparent;
+}
+.gallery-photo{
+  position:relative; scroll-snap-align:start; aspect-ratio:4/5; border-radius:18px; overflow:hidden;
+  background:var(--petrol); border:1px solid color-mix(in oklab,var(--tw-cyan) 18%, transparent);
+}
+.gallery-photo img{ width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease); }
+.gallery-photo:hover img{ transform:scale(1.04); }
 
 /* pillars */
 .pillars{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:clamp(3rem,6vw,5rem);
@@ -356,7 +379,10 @@
   .verse-card .flame{ width:46px; height:46px; margin-bottom:.9rem; font-size:1.35rem; }
   .verse-card p{ font-size:1.1rem; }
   .verse-card .src{ font-size:.62rem; letter-spacing:.16em; }
-  .theme-art{ aspect-ratio:16/11; border-radius:18px; }
+  .event-gallery{ padding:.75rem; border-radius:18px; }
+  .gallery-head{ padding:.25rem .25rem .75rem; align-items:flex-start; flex-direction:column; gap:.25rem; }
+  .gallery-track{ grid-auto-columns:minmax(190px,78%); gap:.7rem; padding:.75rem 0 .25rem; }
+  .gallery-photo{ aspect-ratio:4/4.6; border-radius:14px; }
   .pillars{ grid-template-columns:1fr 1fr; margin-top:1.5rem; border-radius:14px; }
   .pillar{ padding:1rem; }
   .pillar h3{ font-size:1.25rem; margin:.35rem 0 .25rem; }
