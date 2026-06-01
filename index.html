@@ -412,7 +412,7 @@
     let galleryTimer;
     const goGallery = (dir = 1) => {
       galleryIndex = (galleryIndex + dir + photos.length) % photos.length;
-      photos[galleryIndex].scrollIntoView({behavior:'smooth', block:'nearest', inline:'start'});
+      gallery.scrollTo({left:photos[galleryIndex].offsetLeft - gallery.offsetLeft, behavior:'smooth'});
     };
     const startGallery = () => {
       clearInterval(galleryTimer);
