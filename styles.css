@@ -1,0 +1,137 @@
+/* ============================================================
+   4° ENCONTRO DE JOVENS — ADM Acrelândia
+   Sistema visual: petróleo profundo + glow ciano + chama laranja
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Kaushan+Script&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root{
+  /* core palette (do flyer) */
+  --ink:        #03191a;
+  --petrol:     #062826;
+  --petrol-2:   #0a3b38;
+  --teal-deep:  #0d4a45;
+  --cyan:       #19e3cf;
+  --cyan-soft:  #6ff3e6;
+  --flame:      #f7941d;
+  --flame-2:    #ffb347;
+  --paper:      #f4fbf9;
+  --muted:      #9fc7c1;
+
+  --display: 'Anton', sans-serif;
+  --script:  'Kaushan Script', cursive;
+  --ui:      'Space Grotesk', sans-serif;
+
+  --maxw: 1280px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+
+  /* tweakable */
+  --tw-cyan: var(--cyan);
+  --tw-flame: var(--flame);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  font-family:var(--ui);
+  background:var(--ink);
+  color:var(--paper);
+  overflow-x:hidden;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+
+::selection{ background:var(--tw-cyan); color:var(--ink); }
+
+/* ---------- layout helpers ---------- */
+.wrap{ width:min(92%, var(--maxw)); margin-inline:auto; }
+.eyebrow{
+  font-size:clamp(.7rem,.9vw,.82rem);
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  font-weight:600;
+  color:var(--tw-cyan);
+  display:flex; align-items:center; gap:.9em;
+}
+.eyebrow::before{
+  content:""; width:34px; height:1px;
+  background:linear-gradient(90deg,transparent,var(--tw-cyan));
+}
+.eyebrow.center{ justify-content:center; }
+.eyebrow.center::after{
+  content:""; width:34px; height:1px;
+  background:linear-gradient(90deg,var(--tw-cyan),transparent);
+}
+
+.script{ font-family:var(--script); color:var(--tw-cyan); font-weight:400; }
+
+/* energy/glow field reusable */
+.energy{
+  position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;
+}
+.energy::before,.energy::after{
+  content:""; position:absolute; border-radius:50%;
+  filter:blur(70px); opacity:.55; mix-blend-mode:screen;
+}
+.energy::before{
+  width:60vw; height:60vw; left:-12vw; top:-18vw;
+  background:radial-gradient(circle, color-mix(in oklab,var(--tw-cyan) 70%, transparent), transparent 60%);
+  animation:drift1 18s var(--ease) infinite alternate;
+}
+.energy::after{
+  width:46vw; height:46vw; right:-14vw; bottom:-16vw;
+  background:radial-gradient(circle, color-mix(in oklab,var(--tw-cyan) 55%, transparent), transparent 62%);
+  animation:drift2 22s var(--ease) infinite alternate;
+}
+@keyframes drift1{ to{ transform:translate(8vw,10vh) scale(1.15);} }
+@keyframes drift2{ to{ transform:translate(-6vw,-8vh) scale(1.1);} }
+
+/* film grain overlay */
+.grain{
+  position:fixed; inset:0; z-index:9000; pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- reveal (below-fold only) ---------- */
+.reveal{ opacity:0; transform:translateY(38px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+.reveal.d1{ transition-delay:.08s; } .reveal.d2{ transition-delay:.16s; }
+.reveal.d3{ transition-delay:.24s; } .reveal.d4{ transition-delay:.32s; }
+
+/* ---------- hero auto-entrance (above fold — no IO needed) ---------- */
+@keyframes heroUp{
+  from{ opacity:0; transform:translateY(32px); }
+  to  { opacity:1; transform:none; }
+}
+.hero-enter{ animation: heroUp .9s var(--ease) both; }
+.hero-enter.d1{ animation-delay:.12s; }
+.hero-enter.d2{ animation-delay:.26s; }
+.hero-enter.d3{ animation-delay:.42s; }
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{ opacity:1; transform:none; }
+  .hero-enter{ animation:none; opacity:1; }
+  *{ animation-duration:.01ms !important; }
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  --b:var(--tw-flame);
+  display:inline-flex; align-items:center; gap:.7em;
+  font-weight:600; font-size:1rem; letter-spacing:.02em;
+  padding:1.05em 2em; border-radius:999px;
+  background:linear-gradient(180deg,var(--flame-2),var(--b));
+  color:#2a1500; position:relative; overflow:hidden;
+  box-shadow:0 14px 40px -12px color-mix(in oklab,var(--b) 80%, transparent);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.btn:hover{ transform:translateY(-3px); box-shadow:0 22px 50px -14px color-mix(in oklab,var(--b) 90%, transparent); }
+.btn:active{ transform:translateY(0); }
+.btn.ghost{
+  background:transparent; color:var(--paper);
+  border:1px solid color-mix(in oklab,var(--tw-cyan) 50%, transparent);
+  box-shadow:none;
+}
+.btn.ghost:hover{ border-color:var(--tw-cyan); background:color-mix(in oklab,var(--tw-cyan) 10%, transparent); }
