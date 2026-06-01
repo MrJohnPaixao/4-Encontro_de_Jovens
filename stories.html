@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Stories — 4° Encontro de Jovens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Kaushan+Script&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{ box-sizing:border-box; margin:0; padding:0; }
+:root{
+  --ink:#03191a; --petrol:#062826; --petrol2:#0a3b38; --teal:#0d4a45;
+  --cyan:#19e3cf; --cyans:#6ff3e6; --flame:#f7941d; --flame2:#ffb347;
+  --paper:#f4fbf9; --muted:#9fc7c1;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --D:'Anton',sans-serif; --S:'Kaushan Script',cursive; --U:'Space Grotesk',sans-serif;
+}
+html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color:var(--paper); overflow:hidden; touch-action:none; -webkit-font-smoothing:antialiased; }
+
+/* ── STAGE: fills full viewport ── */
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:#000;
+}
+
+/* ── CARD: 1080×1920 scaled to fit ── */
+#card{
+  position:relative;
+  width:1080px; height:1920px;
+  transform-origin:center center;
+  overflow:hidden; border-radius:0;
+  box-shadow:0 0 80px rgba(0,0,0,.9);
+  cursor:pointer; user-select:none;
+}
+@media (min-width:600px){ #card{ border-radius:28px; } }
+
+/* ── TAP ZONES (inside card, full height) ── */
+#tap-prev{ position:absolute; left:0; top:0; width:33%; height:100%; z-index:50; }
+#tap-next{ position:absolute; right:0; top:0; width:67%; height:100%; z-index:50; }
+
+/* ── PROGRESS BARS (inside card, top) ── */
+#progress{
+  position:absolute; top:60px; left:0; right:0; z-index:60;
+  display:flex; gap:12px; padding:0 56px;
+}
+.pb{ flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,.22); overflow:hidden; }
+.pb .pf{ height:100%; width:0; border-radius:3px; background:linear-gradient(90deg,var(--cyan),var(--flame)); }
+.pb.done .pf{ width:100% !important; transition:none; }
+
+/* ── SLIDES ── */
+.slide{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+  opacity:0; pointer-events:none; transition:opacity .5s var(--ease);
+}
+.slide.active{ opacity:1; }
+
+/* shared background */
+.sbg{
+  position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(110% 65% at 78% 0%,  color-mix(in oklab,var(--cyan) 24%,transparent), transparent 55%),
+    radial-gradient(100% 65% at 12% 100%,color-mix(in oklab,var(--flame) 20%,transparent),transparent 55%),
+    linear-gradient(180deg,var(--petrol),var(--ink) 55%,var(--petrol2));
+}
+/* energy lines */
+.slines{
+  position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0;
+  transition:opacity 1.2s var(--ease) .4s;
+}
+.slide.active .slines{ opacity:.55; }
+.slines path{ fill:none; stroke:var(--cyan); stroke-width:2.2;
+  filter:drop-shadow(0 0 9px var(--cyan));
+  stroke-dasharray:2600; stroke-dashoffset:2600; }
+.slide.active .slines path{ animation:lineIn 5s var(--ease) forwards; }
+.slide.active .slines path:nth-child(2){ animation-delay:.35s; }
+.slide.active .slines path:nth-child(3){ animation-delay:.7s; }
+.slide.active .slines path:nth-child(4){ animation-delay:1.05s; }
+@keyframes lineIn{ to{ stroke-dashoffset:0; } }
+
+/* ── SHARED ENTER ANIMATION ── */
+.fi{ opacity:0; transform:translateY(34px); }
+.slide.active .fi{ animation:fadeUp .9s var(--ease) both; }
+.slide.active .fi.d1{ animation-delay:.15s; }
+.slide.active .fi.d2{ animation-delay:.32s; }
+.slide.active .fi.d3{ animation-delay:.50s; }
+.slide.active .fi.d4{ animation-delay:.68s; }
+.slide.active .fi.d5{ animation-delay:.86s; }
+@keyframes fadeUp{ to{ opacity:1; transform:none; } }
+
+/* ──────────────────── SLIDE 1 — HERO ──────────────────── */
+.s1-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; }
+
+.s1-top{ width:100%; padding:148px 80px 0; display:flex; flex-direction:column; align-items:center; gap:22px; }
+.s1-logo{ width:128px; height:128px; object-fit:contain; filter:drop-shadow(0 8px 28px rgba(0,0,0,.65)); }
+.s1-church{ font-size:27px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-align:center; }
+
+.s1-hero{ position:relative; display:flex; align-items:flex-start; justify-content:center; margin-top:40px; line-height:1; }
+.s1-n{
+  font-family:var(--D); font-size:540px; line-height:.82; letter-spacing:-.01em;
+  background:linear-gradient(180deg,#fff 25%,var(--cyans) 85%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 24px 70px rgba(25,227,207,.45));
+  opacity:0; transform:translateY(40px);
+  transition:opacity .9s var(--ease) .4s, transform .9s var(--ease) .4s;
+}
+.slide.active .s1-n{ opacity:1; transform:none; }
+.s1-deg{ font-family:var(--D); font-size:168px; color:var(--flame); padding-top:44px;
+  opacity:0; transform:translateY(20px);
+  transition:opacity .9s var(--ease) .5s, transform .9s var(--ease) .5s; }
+.slide.active .s1-deg{ opacity:1; transform:none; }
+
+.s1-words{ width:100%; padding:0 80px; text-align:center; margin-top:-20px; }
+.s1-enc{
+  font-family:var(--D); font-size:158px; text-transform:uppercase; letter-spacing:.01em;
+  color:var(--paper); line-height:.9;
+  opacity:0; transform:translateY(22px);
+  transition:opacity .9s var(--ease) .6s, transform .9s var(--ease) .6s;
+}
+.slide.active .s1-enc{ opacity:1; transform:none; }
+.s1-jov{
+  font-family:var(--S); font-size:148px; color:var(--cyan); line-height:.8; display:block;
+  filter:drop-shadow(0 10px 36px rgba(25,227,207,.6));
+  transform:rotate(-3deg); transform-origin:left center;
+  opacity:0; transition:opacity .9s var(--ease) .75s;
+}
+.slide.active .s1-jov{ opacity:1; }
+
+/* bottom strip */
+.s1-strip{
+  position:absolute; bottom:0; left:0; right:0; z-index:6; padding:0 80px 100px;
+  background:linear-gradient(0deg,color-mix(in oklab,var(--ink) 95%,transparent) 55%,transparent);
+}
+.s1-theme{ text-align:center; padding:44px 0 32px; border-top:1px solid color-mix(in oklab,var(--cyan) 22%,transparent); }
+.s1-v{ font-family:var(--D); text-transform:uppercase; font-size:66px; line-height:1; color:var(--paper); }
+.s1-v b{ color:var(--flame); display:block; }
+.s1-ref{ font-family:var(--S); color:var(--cyan); font-size:58px; margin-top:8px;
+  filter:drop-shadow(0 4px 18px rgba(25,227,207,.55)); }
+.s1-pills{ display:flex; justify-content:center; gap:28px; margin-top:32px; flex-wrap:wrap; }
+.s1-pill{ display:inline-flex; align-items:center; gap:16px; padding:18px 36px; border-radius:999px; font-size:30px; font-weight:600;
+  border:1.5px solid color-mix(in oklab,var(--cyan) 35%,transparent);
+  background:color-mix(in oklab,var(--cyan) 9%,transparent); color:var(--paper); }
+
+/* ──────────────────── SLIDE 2 — PRELETOR & CANTOR ──────────────────── */
+.s2-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; padding-top:148px; }
+.s2-head{ text-align:center; padding:0 80px; }
+.s2-sup{ font-size:28px; letter-spacing:.28em; text-transform:uppercase; color:var(--flame); font-weight:700; }
+.s2-ttl{ font-family:var(--D); font-size:128px; text-transform:uppercase; line-height:.9; margin:.25em 0 .12em; }
+.s2-ttl em{ font-family:var(--S); font-style:normal; color:var(--cyan); text-transform:none; font-size:1.05em; }
+.s2-desc{ color:var(--muted); font-size:34px; max-width:25ch; margin:0 auto; line-height:1.4; }
+
+.s2-cards{ display:flex; gap:28px; margin-top:60px; padding:0 48px; width:100%; flex:1; min-height:0; }
+.s2-card{
+  flex:1; border-radius:36px; overflow:hidden; position:relative; min-height:0;
+  display:flex; align-items:flex-end;
+  background:linear-gradient(160deg,var(--teal),var(--ink));
+  border:1.5px solid color-mix(in oklab,var(--cyan) 22%,transparent);
+}
+.s2-card .cglow{ position:absolute; inset:0;
+  background:radial-gradient(68% 52% at 50% 6%, color-mix(in oklab,var(--cyan) 28%,transparent), transparent 60%); }
+.s2-card img{ position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:auto; height:91%; object-fit:contain; z-index:1;
+  filter:drop-shadow(0 22px 32px rgba(0,0,0,.55)); }
+.s2-cinfo{ position:relative; z-index:2; width:100%; padding:32px 28px;
+  background:linear-gradient(0deg,color-mix(in oklab,var(--ink) 96%,transparent) 55%,transparent); }
+.s2-crole{ font-size:22px; letter-spacing:.26em; text-transform:uppercase; color:var(--flame); font-weight:700; }
+.s2-cname{ font-family:var(--D); text-transform:uppercase; font-size:54px; line-height:.95; margin-top:8px; color:var(--paper); }
+.s2-cloc{ color:var(--muted); font-size:24px; margin-top:8px; }
+
+.s2-foot{ width:100%; padding:36px 80px 90px;
+  border-top:1px solid color-mix(in oklab,var(--cyan) 16%,transparent);
+  display:flex; align-items:center; justify-content:space-between; }
+.s2-en{ font-family:var(--D); text-transform:uppercase; font-size:64px; line-height:.9; color:var(--paper); }
+.s2-en em{ font-family:var(--S); font-style:normal; color:var(--cyan); text-transform:none; font-size:.85em; }
+.s2-date{ padding:22px 44px; border-radius:999px; font-family:var(--D); font-size:48px;
+  background:linear-gradient(180deg,var(--flame2),var(--flame));
+  color:#2a1500; box-shadow:0 14px 40px -12px rgba(247,148,29,.7); }
+
+/* ──────────────────── SLIDE 3 — LOCAL & CONTAGEM ──────────────────── */
+.s3-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center;
+  padding:148px 80px 90px; }
+.s3-top{ display:flex; align-items:center; gap:28px; }
+.s3-logo{ width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 4px 20px rgba(0,0,0,.5)); }
+.s3-lt .t1{ font-family:var(--D); font-size:48px; letter-spacing:.04em; color:var(--paper); }
+.s3-lt .t2{ font-size:25px; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); }
+
+.s3-cd{ width:100%; margin-top:72px;
+  background:color-mix(in oklab,var(--paper) 5%,transparent);
+  border:1.5px solid color-mix(in oklab,var(--cyan) 24%,transparent);
+  border-radius:36px; padding:60px 50px; text-align:center; }
+.s3-cdlbl{ font-size:26px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
+  margin-bottom:36px; display:flex; align-items:center; justify-content:center; gap:18px; }
+.s3-dot{ width:10px; height:10px; border-radius:50%; background:var(--flame); box-shadow:0 0 16px var(--flame); animation:pdot 1.6s infinite; }
+@keyframes pdot{ 50%{ opacity:.3; transform:scale(.7); } }
+.s3-grid{ display:flex; gap:18px; }
+.s3-cell{ flex:1; background:color-mix(in oklab,var(--ink) 60%,transparent); border-radius:22px; padding:36px 12px;
+  border:1px solid color-mix(in oklab,var(--cyan) 16%,transparent); }
+.s3-cn{ font-family:var(--D); font-size:114px; line-height:1; color:var(--paper); font-variant-numeric:tabular-nums; }
+.s3-cl{ font-size:23px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-top:12px; }
+
+.s3-verse{ width:100%; margin-top:52px; border-left:3px solid var(--flame); padding-left:40px; }
+.s3-vt{ font-size:48px; line-height:1.3; font-weight:500; color:var(--paper); }
+.s3-vt b{ color:var(--flame); }
+.s3-vs{ font-size:25px; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); margin-top:14px; }
+
+.s3-rows{ width:100%; display:flex; flex-direction:column; gap:22px; margin-top:52px; }
+.s3-row{ display:flex; align-items:center; gap:28px; padding:30px 38px; border-radius:24px;
+  background:color-mix(in oklab,var(--paper) 5%,transparent);
+  border:1px solid color-mix(in oklab,var(--cyan) 14%,transparent); }
+.s3-ic{ width:68px; height:68px; flex:none; border-radius:18px; display:grid; place-items:center;
+  border:1.5px solid color-mix(in oklab,var(--cyan) 30%,transparent);
+  background:color-mix(in oklab,var(--cyan) 9%,transparent); color:var(--cyan); font-size:30px; }
+.s3-k{ font-size:23px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+.s3-v{ font-weight:600; font-size:36px; color:var(--paper); }
+
+/* Share bar at bottom of slide 3 */
+.s3-share{ position:relative; z-index:70; margin-top:auto; width:100%; display:flex; gap:20px; }
+.s-btn{
+  flex:1; display:inline-flex; align-items:center; justify-content:center; gap:.6em;
+  font-family:var(--U); font-weight:700; font-size:36px; padding:36px 28px;
+  border-radius:999px; border:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transition:transform .3s var(--ease);
+}
+.s-btn:active{ transform:scale(.97); }
+.s-btn.primary{ background:linear-gradient(180deg,var(--flame2),var(--flame)); color:#2a1500;
+  box-shadow:0 16px 44px -14px rgba(247,148,29,.75); }
+.s-btn.ghost{ background:color-mix(in oklab,var(--paper) 8%,transparent);
+  color:var(--paper); border:2px solid color-mix(in oklab,var(--paper) 25%,transparent); }
+
+/* ── SLIDE INDICATOR (dots) ── */
+#dots{ position:absolute; bottom:32px; left:50%; transform:translateX(-50%); z-index:60; display:flex; gap:10px; }
+.dot-i{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.25); transition:background .3s, transform .3s; }
+.dot-i.on{ background:var(--cyan); transform:scale(1.25); box-shadow:0 0 10px var(--cyan); }
+
+@media(prefers-reduced-motion:reduce){ .fi,.s1-n,.s1-deg,.s1-enc,.s1-jov{ animation:none!important; opacity:1!important; transform:none!important; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+
+    <!-- Progress bars -->
+    <div id="progress">
+      <div class="pb" id="pb0"><div class="pf" id="pf0"></div></div>
+      <div class="pb" id="pb1"><div class="pf" id="pf1"></div></div>
+      <div class="pb" id="pb2"><div class="pf" id="pf2"></div></div>
+    </div>
+
+    <!-- Tap zones -->
+    <div id="tap-prev" onclick="prev()"></div>
+    <div id="tap-next" onclick="advance()"></div>
+
+    <!-- ══ SLIDE 1 — HERO ══ -->
+    <div class="slide active" id="s0">
+      <div class="sbg"></div>
+      <svg class="slines" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M-60,480 C290,320 620,640 1060,440"/>
+        <path d="M-60,820 C310,660 660,960 1080,760"/>
+        <path d="M-60,1180 C280,1020 700,1320 1100,1120"/>
+        <path d="M-60,1540 C260,1380 680,1660 1100,1460"/>
+      </svg>
+      <div class="s1-inner">
+        <div class="s1-top fi">
+          <img class="s1-logo" src="assets/logo-ieadm.png" alt="IEADM">
+          <div class="s1-church">Assembleia de Deus da Missão</div>
+        </div>
+        <div class="s1-hero">
+          <span class="s1-n">4</span>
+          <span class="s1-deg">°</span>
+        </div>
+        <div class="s1-words">
+          <div class="s1-enc">Encontro</div>
+          <span class="s1-jov">de Jovens</span>
+        </div>
+        <div class="s1-strip">
+          <div class="s1-theme fi d3">
+            <div class="s1-v">Santificai-vos<b>na Palavra</b></div>
+            <div class="s1-ref">João 17:17</div>
+          </div>
+          <div class="s1-pills fi d4">
+            <div class="s1-pill">📅 18 de Julho</div>
+            <div class="s1-pill">📍 Acrelândia/AC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SLIDE 2 — PRELETOR & CANTOR ══ -->
+    <div class="slide" id="s1">
+      <div class="sbg"></div>
+      <svg class="slines" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M-60,320 C300,160 680,480 1100,280"/>
+        <path d="M-60,720 C280,560 720,880 1100,680"/>
+        <path d="M-60,1620 C300,1460 720,1740 1100,1540"/>
+      </svg>
+      <div class="s2-inner">
+        <div class="s2-head fi">
+          <div class="s2-sup">Ministração</div>
+          <h2 class="s2-ttl">Preletor &amp;<em>cantor</em></h2>
+          <p class="s2-desc">Uma noite de Palavra e Louvor para edificar a nova geração.</p>
+        </div>
+        <div class="s2-cards fi d2">
+          <div class="s2-card">
+            <div class="cglow"></div>
+            <img src="assets/preletor-james.png" alt="James Paiva">
+            <div class="s2-cinfo">
+              <div class="s2-crole">Preletor</div>
+              <div class="s2-cname">James Paiva</div>
+              <div class="s2-cloc">📍 Assis Brasil — AC</div>
+            </div>
+          </div>
+          <div class="s2-card">
+            <div class="cglow"></div>
+            <img src="assets/cantor-samuel.png" alt="Samuel Barboza">
+            <div class="s2-cinfo">
+              <div class="s2-crole">Cantor</div>
+              <div class="s2-cname">Samuel Barboza</div>
+              <div class="s2-cloc">🎵 Louvor &amp; Adoração</div>
+            </div>
+          </div>
+        </div>
+        <div class="s2-foot fi d3">
+          <div class="s2-en">4° Encontro<br><em>de Jovens</em></div>
+          <div class="s2-date">18·07</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SLIDE 3 — LOCAL & CONTAGEM ══ -->
+    <div class="slide" id="s2">
+      <div class="sbg"></div>
+      <svg class="slines" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M-60,420 C300,240 680,540 1100,340"/>
+        <path d="M-60,900 C280,720 720,1040 1100,840"/>
+        <path d="M-60,1500 C300,1320 680,1640 1100,1440"/>
+      </svg>
+      <div class="s3-inner">
+        <div class="s3-top fi">
+          <img class="s3-logo" src="assets/logo-ieadm.png" alt="IEADM">
+          <div class="s3-lt">
+            <div class="t1">IEADM</div>
+            <div class="t2">Acrelândia — AC</div>
+          </div>
+        </div>
+        <div class="s3-cd fi d2">
+          <div class="s3-cdlbl"><span class="s3-dot"></span>Contagem regressiva<span class="s3-dot"></span></div>
+          <div class="s3-grid">
+            <div class="s3-cell"><div class="s3-cn" id="s-d">--</div><div class="s3-cl">Dias</div></div>
+            <div class="s3-cell"><div class="s3-cn" id="s-h">--</div><div class="s3-cl">Horas</div></div>
+            <div class="s3-cell"><div class="s3-cn" id="s-m">--</div><div class="s3-cl">Min</div></div>
+            <div class="s3-cell"><div class="s3-cn" id="s-s">--</div><div class="s3-cl">Seg</div></div>
+          </div>
+        </div>
+        <div class="s3-verse fi d3">
+          <div class="s3-vt">"Santifica-os na verdade; <b>a tua palavra é a verdade."</b></div>
+          <div class="s3-vs">João 17 · 17</div>
+        </div>
+        <div class="s3-rows fi d4">
+          <div class="s3-row">
+            <span class="s3-ic">📅</span>
+            <div><div class="s3-k">Data</div><div class="s3-v">Sexta, 18 de Julho</div></div>
+          </div>
+          <div class="s3-row">
+            <span class="s3-ic">📍</span>
+            <div><div class="s3-k">Endereço</div><div class="s3-v">Rua dos Pioneiros, 1734</div></div>
+          </div>
+          <div class="s3-row">
+            <span class="s3-ic">⛪</span>
+            <div><div class="s3-k">Igreja</div><div class="s3-v">Assembleia de Deus da Missão</div></div>
+          </div>
+        </div>
+        <div class="s3-share fi d5">
+          <button class="s-btn primary" onclick="shareStory(event)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+            Compartilhar
+          </button>
+          <button class="s-btn ghost" onclick="goToMain(event)">🌐 Site</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dot indicators -->
+    <div id="dots">
+      <div class="dot-i on" data-i="0"></div>
+      <div class="dot-i" data-i="1"></div>
+      <div class="dot-i" data-i="2"></div>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /stage -->
+
+<script>
+// ── Scale: fill full viewport ──
+function scale(){
+  if(!window.innerWidth || !window.innerHeight) return;
+  const c = document.getElementById('card');
+  const s = Math.min(window.innerWidth/1080, window.innerHeight/1920);
+  c.style.transform = `scale(${s})`;
+  c.style.marginTop    = `-${1920*(1-s)/2}px`;
+  c.style.marginBottom = `-${1920*(1-s)/2}px`;
+}
+window.addEventListener('resize', scale);
+window.addEventListener('load', scale);
+document.addEventListener('DOMContentLoaded', function retry(){
+  if(window.innerWidth > 0 && window.innerHeight > 0){ scale(); }
+  else{ requestAnimationFrame(retry); }
+});
+
+// ── State ──
+const N = 3; let cur = 0, rafId, progStart;
+const SLIDE_MS = 7000;
+
+function showSlide(n){
+  cur = ((n % N) + N) % N;
+  document.querySelectorAll('.slide').forEach((el,i)=> el.classList.toggle('active', i===cur));
+  document.querySelectorAll('.dot-i').forEach((el,i)=> el.classList.toggle('on', i===cur));
+  document.querySelectorAll('.pb').forEach((el,i)=>{
+    el.classList.toggle('done', i < cur);
+    const pf = el.querySelector('.pf');
+    if(i < cur){ pf.style.transition='none'; pf.style.width='100%'; }
+    else if(i === cur){ pf.style.transition='none'; pf.style.width='0%'; }
+    else{ pf.style.transition='none'; pf.style.width='0%'; }
+  });
+  cancelAnimationFrame(rafId);
+  startProgress();
+}
+
+function startProgress(){
+  const pf = document.querySelector(`#pf${cur}`);
+  progStart = performance.now();
+  function step(now){
+    const pct = Math.min(100, (now - progStart) / SLIDE_MS * 100);
+    pf.style.width = pct + '%';
+    if(pct < 100){ rafId = requestAnimationFrame(step); }
+    else{ advance(); }
+  }
+  rafId = requestAnimationFrame(step);
+}
+
+function advance(){ showSlide(cur + 1); }
+function prev(){ if(cur > 0) showSlide(cur - 1); }
+
+showSlide(0);
+
+// ── Countdown ──
+function target(){ const n=new Date(),yr=n.getFullYear(); let t=new Date(yr,6,18,19,0,0); if(t<n){t=new Date(yr+1,6,18,19,0,0);} return t; }
+const T = target(), pad = n=>String(n).padStart(2,'0');
+function tick(){
+  const d = Math.max(0, T-new Date());
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('s-d',pad(Math.floor(d/86400000)));
+  set('s-h',pad(Math.floor(d%86400000/3600000)));
+  set('s-m',pad(Math.floor(d%3600000/60000)));
+  set('s-s',pad(Math.floor(d%60000/1000)));
+}
+tick(); setInterval(tick,1000);
+
+// ── Share ──
+async function shareStory(e){ if(e){e.stopPropagation();cancelAnimationFrame(rafId);}
+  const data={ title:'4° Encontro de Jovens — Acrelândia/AC',
+    text:'🔥 Santificai-vos na Palavra (João 17:17)\n📅 18 de Julho · Assembleia de Deus da Missão · Acrelândia/AC\nVem fazer parte!',
+    url:'https://mrjohnpaixao.github.io/4-Encontro_de_Jovens/' };
+  if(navigator.share){ try{ await navigator.share(data);} catch(_){} }
+  else{ navigator.clipboard.writeText(data.url).then(()=>alert('Link copiado! Cole no WhatsApp ou Instagram.')); }
+  startProgress();
+}
+function goToMain(e){ if(e)e.stopPropagation(); window.open('index.html','_blank'); }
+</script>
+</body>
+</html>
