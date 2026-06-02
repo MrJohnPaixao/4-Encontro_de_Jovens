@@ -301,6 +301,47 @@
   padding:.5em 1em; border-radius:999px; background:color-mix(in oklab,var(--ink) 60%, transparent);
   border:1px solid color-mix(in oklab,var(--tw-cyan) 30%, transparent); color:var(--tw-cyan); backdrop-filter:blur(6px); }
 
+/* ---------- HINOS ---------- */
+.hymns{
+  position:relative; padding:clamp(5rem,11vw,9rem) 0; overflow:hidden;
+  background:linear-gradient(180deg,var(--ink),var(--petrol-2) 58%,var(--ink));
+}
+.hymns .wrap{ position:relative; z-index:2; }
+.hymn-main,.hymn-card{
+  border:1px solid color-mix(in oklab,var(--tw-cyan) 20%, transparent);
+  background:color-mix(in oklab,var(--ink) 58%, transparent);
+  backdrop-filter:blur(10px);
+  box-shadow:0 34px 70px -52px #000;
+}
+.hymn-main{
+  display:grid; grid-template-columns:.82fr 1.18fr; gap:clamp(1.2rem,3vw,2rem);
+  align-items:center; border-radius:28px; padding:clamp(1rem,2vw,1.4rem);
+}
+.hymn-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:clamp(1rem,2.4vw,1.6rem);
+  margin-top:clamp(1rem,2.8vw,1.8rem);
+}
+.hymn-card{ border-radius:22px; overflow:hidden; }
+.hymn-card .hymn-copy{ padding:1.25rem 1.35rem 0; }
+.hymn-copy{ padding:clamp(1.2rem,3vw,2.2rem); }
+.hymn-copy .tag{
+  display:inline-flex; width:max-content; margin-bottom:.85rem;
+  font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; font-weight:700;
+  color:var(--tw-flame);
+}
+.hymn-copy h3{
+  font-family:var(--display); text-transform:uppercase; line-height:.95;
+  font-size:clamp(1.8rem,4vw,3.6rem); font-weight:400;
+}
+.hymn-copy p{ margin-top:.85rem; max-width:34ch; color:var(--muted); }
+.video-frame{
+  position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:18px;
+  background:var(--ink);
+  border:1px solid color-mix(in oklab,var(--tw-cyan) 18%, transparent);
+}
+.hymn-card .video-frame{ margin:1rem; margin-top:1.1rem; }
+.video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+
 /* ---------- LÍDERES ---------- */
 .team{ position:relative; padding:clamp(5rem,11vw,9rem) 0;
   background:linear-gradient(180deg,var(--ink),var(--petrol)); overflow:hidden; }
@@ -450,7 +491,7 @@
   .marquee{ padding:.72rem 0; }
   .marquee-track span{ font-size:1.05rem; gap:1.8rem; }
 
-  .theme,.feat,.team,.local-cta{ padding:3rem 0; }
+  .theme,.feat,.hymns,.team,.local-cta{ padding:3rem 0; }
   .theme-grid{ gap:1.5rem; }
   .theme h2,.sec-head h2,.info-main h2{ font-size:clamp(2.2rem,12vw,3.4rem); }
   .theme .ref{ font-size:1.35rem; }
@@ -475,6 +516,17 @@
   .star .info{ padding:1.35rem; }
   .star .tag{ top:1rem; left:1rem; font-size:.56rem; letter-spacing:.18em; }
   .star h3{ font-size:2rem; }
+
+  .hymn-main,.hymn-grid{ grid-template-columns:1fr; }
+  .hymn-main{ border-radius:18px; padding:.75rem; }
+  .hymn-copy{ padding:1rem; }
+  .hymn-card{ border-radius:18px; }
+  .hymn-card .hymn-copy{ padding:1rem 1rem 0; }
+  .hymn-copy .tag{ font-size:.58rem; letter-spacing:.2em; margin-bottom:.55rem; }
+  .hymn-copy h3{ font-size:clamp(1.65rem,9vw,2.4rem); }
+  .hymn-copy p{ font-size:.9rem; }
+  .video-frame{ border-radius:14px; }
+  .hymn-card .video-frame{ margin:.75rem; }
 
   .pastor-card{ min-height:0; border-radius:18px; }
   .pastor-card__photo{ max-height:330px; }
