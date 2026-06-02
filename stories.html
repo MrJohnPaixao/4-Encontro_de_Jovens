@@ -435,9 +435,64 @@ document.addEventListener('DOMContentLoaded', function retry(){
 });
 
 // ── State ──
-const N = 3; let cur = 0, rafId, progStart, actionsTimer;
+const N = 3;
 const SLIDE_MS = 7000;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dots = Array.from(document.querySelectorAll('.dot-i'));
+const bars = Array.from(document.querySelectorAll('.pb'));
+const fills = bars.map(el => el.querySelector('.pf'));
 const storyActions = document.getElementById('story-actions');
+
+let cur = 0;
+let rafId = 0;
+let progressToken = 0;
+let progressStart = 0;
+let progressElapsed = 0;
+let actionsTimer = 0;
+let navLock = false;
+let isPaused = false;
+
+function stopProgress(){
+  progressToken++;
+  if(rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+}
+
+function setProgress(width){
+  const pf = fills[cur];
+  if(pf) pf.style.width = `${Math.max(0, Math.min(100, width))}%`;
+}
+
+function startProgress(fromMs = 0){
+  stopProgress();
+  if(document.hidden) return;
+  isPaused = false;
+  progressElapsed = Math.max(0, Math.min(SLIDE_MS, fromMs));
+  progressStart = performance.now() - progressElapsed;
+  const token = progressToken;
+
+  function step(now){
+    if(token !== progressToken || isPaused || document.hidden) return;
+    progressElapsed = Math.min(SLIDE_MS, now - progressStart);
+    setProgress((progressElapsed / SLIDE_MS) * 100);
+    if(progressElapsed >= SLIDE_MS){
+      goToSlide(cur + 1);
+      return;
+    }
+    rafId = requestAnimationFrame(step);
+  }
+  rafId = requestAnimationFrame(step);
+}
+
+function pauseProgress(){
+  if(isPaused) return;
+  isPaused = true;
+  if(rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+  progressElapsed = Math.min(SLIDE_MS, performance.now() - progressStart);
+}
+
+function resumeProgress(){
+  if(!document.hidden) startProgress(progressElapsed);
+}
 
 function setStoryActions(show){
   if(!storyActions) return;
@@ -451,16 +506,19 @@ function revealStoryActions(){
   actionsTimer = setTimeout(()=>setStoryActions(false), 3600);
 }
 
+function hideStoryActions(){
+  clearTimeout(actionsTimer);
+  setStoryActions(false);
+}
+
 function handlePrevTap(e){
   if(e) e.stopPropagation();
-  if(!storyActions?.classList.contains('show')){ revealStoryActions(); return; }
   prev();
   revealStoryActions();
 }
 
 function handleNextTap(e){
   if(e) e.stopPropagation();
-  if(!storyActions?.classList.contains('show')){ revealStoryActions(); return; }
   advance();
   revealStoryActions();
 }
@@ -468,39 +526,39 @@ function handleNextTap(e){
 storyActions?.addEventListener('pointerdown', e=>e.stopPropagation());
 storyActions?.addEventListener('click', e=>e.stopPropagation());
 
-function showSlide(n){
+function goToSlide(n){
+  stopProgress();
   cur = ((n % N) + N) % N;
-  setStoryActions(false);
-  clearTimeout(actionsTimer);
-  document.querySelectorAll('.slide').forEach((el,i)=> el.classList.toggle('active', i===cur));
-  document.querySelectorAll('.dot-i').forEach((el,i)=> el.classList.toggle('on', i===cur));
-  document.querySelectorAll('.pb').forEach((el,i)=>{
+  hideStoryActions();
+  slides.forEach((el,i)=> el.classList.toggle('active', i===cur));
+  dots.forEach((el,i)=> el.classList.toggle('on', i===cur));
+  bars.forEach((el,i)=>{
     el.classList.toggle('done', i < cur);
-    const pf = el.querySelector('.pf');
+    const pf = fills[i];
+    if(!pf) return;
     if(i < cur){ pf.style.transition='none'; pf.style.width='100%'; }
     else if(i === cur){ pf.style.transition='none'; pf.style.width='0%'; }
     else{ pf.style.transition='none'; pf.style.width='0%'; }
   });
-  cancelAnimationFrame(rafId);
-  startProgress();
+  startProgress(0);
 }
 
-function startProgress(){
-  const pf = document.querySelector(`#pf${cur}`);
-  progStart = performance.now();
-  function step(now){
-    const pct = Math.min(100, (now - progStart) / SLIDE_MS * 100);
-    pf.style.width = pct + '%';
-    if(pct < 100){ rafId = requestAnimationFrame(step); }
-    else{ advance(); }
-  }
-  rafId = requestAnimationFrame(step);
+function navigate(dir){
+  if(navLock) return;
+  navLock = true;
+  setTimeout(()=>{ navLock = false; }, 260);
+  goToSlide(cur + dir);
 }
 
-function advance(){ showSlide(cur + 1); }
-function prev(){ if(cur > 0) showSlide(cur - 1); }
+function advance(){ navigate(1); }
+function prev(){ if(cur > 0) navigate(-1); else revealStoryActions(); }
 
-showSlide(0);
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden) pauseProgress();
+  else resumeProgress();
+});
+
+goToSlide(0);
 
 // ── Countdown ──
 function target(){ const n=new Date(),yr=n.getFullYear(); let t=new Date(yr,6,18,19,0,0); if(t<n){t=new Date(yr+1,6,18,19,0,0);} return t; }
@@ -516,13 +574,13 @@ function tick(){
 tick(); setInterval(tick,1000);
 
 // ── Share ──
-async function shareStory(e){ if(e){e.stopPropagation();cancelAnimationFrame(rafId);}
+async function shareLinkFallback(e){ if(e){e.stopPropagation();pauseProgress();}
   const data={ title:'4° Encontro de Jovens — Acrelândia/AC',
     text:'🔥 Santificai-vos na Palavra (João 17:17)\n📅 18 de Julho · Assembleia de Deus da Missão · Acrelândia/AC\nVem fazer parte!',
     url:'https://mrjohnpaixao.github.io/4-Encontro_de_Jovens/' };
   if(navigator.share){ try{ await navigator.share(data);} catch(_){} }
   else{ navigator.clipboard.writeText(data.url).then(()=>alert('Link copiado! Cole no WhatsApp ou Instagram.')); }
-  startProgress();
+  resumeProgress();
 }
 function goToMain(e){ if(e)e.stopPropagation(); window.open('index.html','_blank'); }
 
@@ -545,7 +603,8 @@ function downloadUrl(url){
 }
 
 async function shareStory(e){
-  if(e){ e.stopPropagation(); cancelAnimationFrame(rafId); }
+  if(e) e.stopPropagation();
+  pauseProgress();
   try{
     const file = await currentStoryFile();
     if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -560,13 +619,14 @@ async function shareStory(e){
   }catch(_){
     downloadUrl(storyFiles[cur] || storyFiles[0]);
   }
-  startProgress();
+  resumeProgress();
 }
 
 function downloadStory(e){
-  if(e){ e.stopPropagation(); cancelAnimationFrame(rafId); }
+  if(e) e.stopPropagation();
+  pauseProgress();
   downloadUrl(storyFiles[cur] || storyFiles[0]);
-  startProgress();
+  resumeProgress();
 }
 </script>
 </body>
