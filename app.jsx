@@ -34,7 +34,6 @@ function App(){
     // edition number across the page
     const n = t.edition;
     setText('[data-ed-num]', n);
-    setText('[data-ed-badge]', n + '° Edição');
     setText('[data-ed-nav]', n + '° ENCONTRO');
     document.querySelectorAll('[data-ed-foot]').forEach(el=>{ el.childNodes[0] && (el.childNodes[0].textContent = n + '° Encontro'); });
     document.title = n + '° Encontro de Jovens — ADM Acrelândia';
