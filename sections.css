@@ -1,5 +1,5 @@
 /* ============================================================
-   SEÇÕES — 4° Encontro de Jovens
+   SEÇÕES — 5° Encontro de Jovens
    ============================================================ */
 
 /* ---------- NAV ---------- */
@@ -65,7 +65,11 @@
 @keyframes linePulse{ 0%,100%{ stroke-width:1.2;} 50%{ stroke-width:1.8;} }
 
 .hero-inner{ position:relative; z-index:3; }
-.hero-top{ display:flex; align-items:center; gap:1rem; margin-bottom:2rem; }
+.hero-top,.hero-kicker{ display:flex; align-items:center; gap:1rem; margin-bottom:2rem; }
+.hero-kicker{
+  margin-bottom:.75rem;
+  transform:translateX(.15rem);
+}
 .hero-badge{
   font-size:.74rem; letter-spacing:.28em; text-transform:uppercase; font-weight:600;
   color:var(--tw-cyan); padding:.5em 1.1em; border-radius:999px;
@@ -161,6 +165,7 @@
     transform:translateY(.6rem);
   }
   .hero-top{ margin-bottom:1.25rem; }
+  .hero-kicker{ margin-bottom:.55rem; }
   .hero-title{
     width:min(100%, 1120px);
     transform:translateY(-.2rem);
@@ -428,7 +433,7 @@
     stroke-width:1.8;
     animation-duration:1.8s, 4.8s, 3.6s;
   }
-  .hero-top{ margin-bottom:1.1rem; gap:.7rem; flex-wrap:wrap; }
+  .hero-top,.hero-kicker{ margin-bottom:.8rem; gap:.7rem; flex-wrap:wrap; }
   .hero-badge{ animation:badgePulse 2.8s ease-in-out infinite; }
   .hero-badge{ font-size:.66rem; padding:.45em .9em; letter-spacing:.2em; }
   .hero-sub{ font-size:.68rem; letter-spacing:.18em; }

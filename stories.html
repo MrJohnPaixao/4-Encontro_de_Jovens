@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Stories — 4° Encontro de Jovens</title>
+<title>Stories — 5° Encontro de Jovens</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Kaushan+Script&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -287,7 +287,7 @@ body{ position:fixed; inset:0; }
           <div class="s1-church">Assembleia de Deus da Missão</div>
         </div>
         <div class="s1-hero">
-          <span class="s1-n">4</span>
+          <span class="s1-n">5</span>
           <span class="s1-deg">°</span>
         </div>
         <div class="s1-words">
@@ -342,7 +342,7 @@ body{ position:fixed; inset:0; }
           </div>
         </div>
         <div class="s2-foot fi d3">
-          <div class="s2-en">4° Encontro<br><em>de Jovens</em></div>
+          <div class="s2-en">5° Encontro<br><em>de Jovens</em></div>
           <div class="s2-date">18·07</div>
         </div>
       </div>
@@ -575,7 +575,7 @@ tick(); setInterval(tick,1000);
 
 // ── Share ──
 async function shareLinkFallback(e){ if(e){e.stopPropagation();pauseProgress();}
-  const data={ title:'4° Encontro de Jovens — Acrelândia/AC',
+  const data={ title:'5° Encontro de Jovens — Acrelândia/AC',
     text:'🔥 Santificai-vos na Palavra (João 17:17)\n📅 18 de Julho · Assembleia de Deus da Missão · Acrelândia/AC\nVem fazer parte!',
     url:'https://mrjohnpaixao.github.io/4-Encontro_de_Jovens/' };
   if(navigator.share){ try{ await navigator.share(data);} catch(_){} }
@@ -590,13 +590,13 @@ async function currentStoryFile(){
   const url = storyFiles[cur] || storyFiles[0];
   const res = await fetch(url, {cache:'no-store'});
   const blob = await res.blob();
-  return new File([blob], `4-encontro-story-${cur + 1}.png`, {type:'image/png'});
+  return new File([blob], `5-encontro-story-${cur + 1}.png`, {type:'image/png'});
 }
 
 function downloadUrl(url){
   const a = document.createElement('a');
   a.href = url;
-  a.download = `4-encontro-story-${cur + 1}.png`;
+  a.download = `5-encontro-story-${cur + 1}.png`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -609,7 +609,7 @@ async function shareStory(e){
     const file = await currentStoryFile();
     if(navigator.canShare && navigator.canShare({files:[file]})){
       await navigator.share({
-        title:'4° Encontro de Jovens',
+        title:'5° Encontro de Jovens',
         text:'Santificai-vos na Palavra - João 17:17',
         files:[file]
       });

@@ -2,7 +2,7 @@
 const { useEffect } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "edition": "4",
+  "edition": "5",
   "cyan": "#19e3cf",
   "flame": "#f7941d",
   "energy": 0.55,
@@ -43,7 +43,7 @@ function App(){
   return (
     <TweaksPanel>
       <TweakSection label="Evento" />
-      <TweakRadio label="Edição" value={t.edition} options={['4','5']}
+      <TweakRadio label="Edição" value={t.edition} options={['5','4']}
         onChange={(v)=>setTweak('edition', v)} />
 
       <TweakSection label="Cores de acento" />
