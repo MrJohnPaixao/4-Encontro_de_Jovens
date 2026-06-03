@@ -73,7 +73,7 @@
 .hero-title .num{
   font-family:var(--display);
   font-size:clamp(7rem,26vw,24rem);
-  position:relative; top:.12em;
+  position:relative; top:.18em;
   background:linear-gradient(180deg,#fff 30%, var(--cyan-soft));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 10px 40px color-mix(in oklab,var(--tw-cyan) 30%, transparent));
@@ -164,7 +164,7 @@
     width:min(100%, 1120px);
     transform:translateY(-.2rem);
   }
-  .hero-title .num{ font-size:clamp(9rem,18vw,18.5rem); top:.18em; }
+  .hero-title .num{ font-size:clamp(9rem,18vw,18.5rem); top:.24em; }
   .hero-title .deg{ font-size:clamp(2.7rem,5vw,4.8rem); }
   .hero-title .word{ font-size:clamp(4.2rem,8vw,8.4rem); }
   .hero-title .jovens{
@@ -178,7 +178,7 @@
 
 @media (min-width:1500px){
   .hero-title{ transform:translateY(-.45rem); }
-  .hero-title .num{ font-size:17.2rem; top:.2em; }
+  .hero-title .num{ font-size:17.2rem; top:.26em; }
   .hero-title .word{ font-size:7.8rem; }
   .hero-title .jovens{ font-size:9.6rem; }
 }

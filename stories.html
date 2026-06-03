@@ -16,7 +16,7 @@
   --ease:cubic-bezier(.22,.61,.36,1);
   --D:'Anton',sans-serif; --S:'Kaushan Script',cursive; --U:'Space Grotesk',sans-serif;
 }
-html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color:var(--paper); overflow:hidden; touch-action:none; -webkit-font-smoothing:antialiased; }
+html,body{ width:100%; height:100%; background:#000; font-family:var(--U); color:var(--paper); overflow:hidden; touch-action:manipulation; -webkit-font-smoothing:antialiased; }
 body{ position:fixed; inset:0; }
 
 /* ── STAGE: fills full viewport ── */
@@ -37,17 +37,26 @@ body{ position:fixed; inset:0; }
   overflow:hidden; border-radius:0;
   box-shadow:0 0 80px rgba(0,0,0,.9);
   cursor:pointer; user-select:none;
+  background:var(--ink);
+  --safe-top:118px;
+  --safe-bottom:178px;
 }
 @media (min-width:600px){ #card{ border-radius:28px; } }
 
 /* ── TAP ZONES (inside card, full height) ── */
-#tap-prev{ position:absolute; left:0; top:0; width:33%; height:100%; z-index:50; }
-#tap-next{ position:absolute; right:0; top:0; width:67%; height:100%; z-index:50; }
+#tap-prev,#tap-next{
+  position:absolute; top:var(--safe-top); bottom:var(--safe-bottom);
+  z-index:45; border:0; background:transparent; color:transparent;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+}
+#tap-prev{ left:0; width:33%; }
+#tap-next{ right:0; width:67%; }
 
 /* ── PROGRESS BARS (inside card, top) ── */
 #progress{
-  position:absolute; top:60px; left:0; right:0; z-index:60;
+  position:absolute; top:58px; left:0; right:0; z-index:80;
   display:flex; gap:12px; padding:0 56px;
+  pointer-events:none;
 }
 .pb{ flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,.22); overflow:hidden; }
 .pb .pf{ height:100%; width:0; border-radius:3px; background:linear-gradient(90deg,var(--cyan),var(--flame)); }
@@ -56,6 +65,7 @@ body{ position:fixed; inset:0; }
 /* ── SLIDES ── */
 .slide{
   position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+  padding-top:var(--safe-top); padding-bottom:var(--safe-bottom);
   opacity:0; pointer-events:none; transition:opacity .5s var(--ease);
 }
 .slide.active{ opacity:1; }
@@ -96,7 +106,7 @@ body{ position:fixed; inset:0; }
 /* ──────────────────── SLIDE 1 — HERO ──────────────────── */
 .s1-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; }
 
-.s1-top{ width:100%; padding:148px 80px 0; display:flex; flex-direction:column; align-items:center; gap:22px; }
+.s1-top{ width:100%; padding:18px 80px 0; display:flex; flex-direction:column; align-items:center; gap:22px; }
 .s1-logo{ width:128px; height:128px; object-fit:contain; filter:drop-shadow(0 8px 28px rgba(0,0,0,.65)); }
 .s1-church{ font-size:27px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-align:center; }
 
@@ -133,7 +143,7 @@ body{ position:fixed; inset:0; }
 
 /* bottom strip */
 .s1-strip{
-  position:absolute; bottom:0; left:0; right:0; z-index:6; padding:0 80px 100px;
+  position:absolute; bottom:0; left:0; right:0; z-index:6; padding:0 80px 18px;
   background:linear-gradient(0deg,color-mix(in oklab,var(--ink) 95%,transparent) 55%,transparent);
 }
 .s1-theme{ text-align:center; padding:44px 0 32px; border-top:1px solid color-mix(in oklab,var(--cyan) 22%,transparent); }
@@ -147,7 +157,7 @@ body{ position:fixed; inset:0; }
   background:color-mix(in oklab,var(--cyan) 9%,transparent); color:var(--paper); }
 
 /* ──────────────────── SLIDE 2 — PRELETOR & CANTOR ──────────────────── */
-.s2-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; padding-top:148px; }
+.s2-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; padding-top:18px; }
 .s2-head{ text-align:center; padding:0 80px; }
 .s2-sup{ font-size:28px; letter-spacing:.28em; text-transform:uppercase; color:var(--flame); font-weight:700; }
 .s2-ttl{ font-family:var(--D); font-size:128px; text-transform:uppercase; line-height:.9; margin:.25em 0 .12em; }
@@ -197,7 +207,7 @@ body{ position:fixed; inset:0; }
   text-shadow:0 4px 22px rgba(0,0,0,.96), 0 0 34px rgba(0,0,0,.72); }
 .s2-cloc{ color:var(--muted); font-size:24px; margin-top:8px; text-shadow:0 3px 14px rgba(0,0,0,.9); }
 
-.s2-foot{ width:100%; padding:36px 80px 90px;
+.s2-foot{ width:100%; padding:32px 80px 18px;
   border-top:1px solid color-mix(in oklab,var(--cyan) 16%,transparent);
   display:flex; align-items:center; justify-content:space-between; }
 .s2-en{ font-family:var(--D); text-transform:uppercase; font-size:64px; line-height:.9; color:var(--paper); }
@@ -208,13 +218,13 @@ body{ position:fixed; inset:0; }
 
 /* ──────────────────── SLIDE 3 — LOCAL & CONTAGEM ──────────────────── */
 .s3-inner{ position:relative; z-index:5; width:100%; height:100%; display:flex; flex-direction:column; align-items:center;
-  padding:148px 80px 90px; }
+  padding:18px 80px 0; }
 .s3-top{ display:flex; align-items:center; gap:28px; }
 .s3-logo{ width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 4px 20px rgba(0,0,0,.5)); }
 .s3-lt .t1{ font-family:var(--D); font-size:48px; letter-spacing:.04em; color:var(--paper); }
 .s3-lt .t2{ font-size:25px; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); }
 
-.s3-cd{ width:100%; margin-top:72px;
+.s3-cd{ width:100%; margin-top:48px;
   background:color-mix(in oklab,var(--paper) 5%,transparent);
   border:1.5px solid color-mix(in oklab,var(--cyan) 24%,transparent);
   border-radius:36px; padding:60px 50px; text-align:center; }
@@ -228,12 +238,12 @@ body{ position:fixed; inset:0; }
 .s3-cn{ font-family:var(--D); font-size:114px; line-height:1; color:var(--paper); font-variant-numeric:tabular-nums; }
 .s3-cl{ font-size:23px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-top:12px; }
 
-.s3-verse{ width:100%; margin-top:52px; border-left:3px solid var(--flame); padding-left:40px; }
+.s3-verse{ width:100%; margin-top:42px; border-left:3px solid var(--flame); padding-left:40px; }
 .s3-vt{ font-size:48px; line-height:1.3; font-weight:500; color:var(--paper); }
 .s3-vt b{ color:var(--flame); }
 .s3-vs{ font-size:25px; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); margin-top:14px; }
 
-.s3-rows{ width:100%; display:flex; flex-direction:column; gap:22px; margin-top:52px; }
+.s3-rows{ width:100%; display:flex; flex-direction:column; gap:18px; margin-top:42px; }
 .s3-row{ display:flex; align-items:center; gap:28px; padding:30px 38px; border-radius:24px;
   background:color-mix(in oklab,var(--paper) 5%,transparent);
   border:1px solid color-mix(in oklab,var(--cyan) 14%,transparent); }
@@ -259,27 +269,28 @@ body{ position:fixed; inset:0; }
 .s3-share[hidden]{ display:none !important; }
 
 /* ── SLIDE INDICATOR (dots) ── */
-#dots{ position:absolute; bottom:32px; left:50%; transform:translateX(-50%); z-index:60; display:flex; gap:10px; }
+#dots{ position:absolute; bottom:136px; left:50%; transform:translateX(-50%); z-index:82; display:flex; gap:10px; pointer-events:none; }
 .dot-i{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.25); transition:background .3s, transform .3s; }
 .dot-i.on{ background:var(--cyan); transform:scale(1.25); box-shadow:0 0 10px var(--cyan); }
 
 #story-actions{
-  position:absolute; left:64px; right:64px; bottom:72px; z-index:85;
-  display:flex; gap:18px; opacity:0; pointer-events:none; transform:translateY(24px);
-  transition:opacity .28s var(--ease), transform .28s var(--ease);
-}
-#story-actions.show{
-  opacity:1; pointer-events:auto; transform:none;
+  position:absolute; left:56px; right:56px; bottom:44px; z-index:90;
+  display:flex; gap:18px; pointer-events:auto;
+  transform:none;
 }
 .story-action{
   flex:1; border:0; border-radius:999px; padding:24px 28px;
   font-family:var(--U); font-size:30px; font-weight:800; cursor:pointer;
   display:inline-flex; align-items:center; justify-content:center; gap:.55em;
-  -webkit-tap-highlight-color:transparent;
+  min-height:84px;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
 .story-action.primary{ background:linear-gradient(180deg,var(--flame2),var(--flame)); color:#2a1500; }
 .story-action.ghost{ background:rgba(244,251,249,.1); color:var(--paper); border:2px solid rgba(244,251,249,.25); }
 
+@media (max-aspect-ratio:9/18){
+  #card{ --safe-top:132px; --safe-bottom:190px; }
+}
 @media(prefers-reduced-motion:reduce){ .fi,.s1-n,.s1-deg,.s1-enc,.s1-jov{ animation:none!important; opacity:1!important; transform:none!important; } }
 </style>
 </head>
@@ -295,8 +306,8 @@ body{ position:fixed; inset:0; }
     </div>
 
     <!-- Tap zones -->
-    <div id="tap-prev" onclick="handlePrevTap(event)"></div>
-    <div id="tap-next" onclick="handleNextTap(event)"></div>
+    <button id="tap-prev" type="button" aria-label="Story anterior"></button>
+    <button id="tap-next" type="button" aria-label="Próximo story"></button>
 
     <!-- ══ SLIDE 1 — HERO ══ -->
     <div class="slide active" id="s0">
@@ -406,7 +417,7 @@ body{ position:fixed; inset:0; }
         <div class="s3-rows fi d4">
           <div class="s3-row">
             <span class="s3-ic">📅</span>
-            <div><div class="s3-k">Data</div><div class="s3-v">Sexta, 18 de Julho</div></div>
+            <div><div class="s3-k">Data</div><div class="s3-v">Sábado, 18 de Julho</div></div>
           </div>
           <div class="s3-row">
             <span class="s3-ic">📍</span>
@@ -434,7 +445,7 @@ body{ position:fixed; inset:0; }
       <div class="dot-i" data-i="2"></div>
     </div>
 
-    <div id="story-actions" aria-hidden="true">
+    <div id="story-actions" aria-hidden="false">
       <button class="story-action primary" type="button" onclick="shareStory(event)">Compartilhar PNG</button>
       <button class="story-action ghost" type="button" onclick="downloadStory(event)">Baixar</button>
     </div>
@@ -468,6 +479,8 @@ const dots = Array.from(document.querySelectorAll('.dot-i'));
 const bars = Array.from(document.querySelectorAll('.pb'));
 const fills = bars.map(el => el.querySelector('.pf'));
 const storyActions = document.getElementById('story-actions');
+const tapPrev = document.getElementById('tap-prev');
+const tapNext = document.getElementById('tap-next');
 
 let cur = 0;
 let rafId = 0;
@@ -477,6 +490,7 @@ let progressElapsed = 0;
 let actionsTimer = 0;
 let navLock = false;
 let isPaused = false;
+let isBusy = false;
 
 function stopProgress(){
   progressToken++;
@@ -501,7 +515,12 @@ function startProgress(fromMs = 0){
     progressElapsed = Math.min(SLIDE_MS, now - progressStart);
     setProgress((progressElapsed / SLIDE_MS) * 100);
     if(progressElapsed >= SLIDE_MS){
-      goToSlide(cur + 1);
+      if(cur < N - 1){
+        goToSlide(cur + 1);
+      }else{
+        setProgress(100);
+        pauseProgress();
+      }
       return;
     }
     rafId = requestAnimationFrame(step);
@@ -522,35 +541,34 @@ function resumeProgress(){
 
 function setStoryActions(show){
   if(!storyActions) return;
-  storyActions.classList.toggle('show', show);
-  storyActions.setAttribute('aria-hidden', show ? 'false' : 'true');
+  storyActions.setAttribute('aria-hidden', 'false');
 }
 
 function revealStoryActions(){
   setStoryActions(true);
-  clearTimeout(actionsTimer);
-  actionsTimer = setTimeout(()=>setStoryActions(false), 3600);
 }
 
 function hideStoryActions(){
   clearTimeout(actionsTimer);
-  setStoryActions(false);
+  setStoryActions(true);
 }
 
 function handlePrevTap(e){
-  if(e) e.stopPropagation();
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+  if(isBusy) return;
   prev();
-  revealStoryActions();
 }
 
 function handleNextTap(e){
-  if(e) e.stopPropagation();
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+  if(isBusy) return;
   advance();
-  revealStoryActions();
 }
 
 storyActions?.addEventListener('pointerdown', e=>e.stopPropagation());
 storyActions?.addEventListener('click', e=>e.stopPropagation());
+tapPrev?.addEventListener('pointerup', handlePrevTap);
+tapNext?.addEventListener('pointerup', handleNextTap);
 
 function goToSlide(n){
   stopProgress();
@@ -572,12 +590,12 @@ function goToSlide(n){
 function navigate(dir){
   if(navLock) return;
   navLock = true;
-  setTimeout(()=>{ navLock = false; }, 260);
+  setTimeout(()=>{ navLock = false; }, 650);
   goToSlide(cur + dir);
 }
 
-function advance(){ navigate(1); }
-function prev(){ if(cur > 0) navigate(-1); else revealStoryActions(); }
+function advance(){ if(cur < N - 1) navigate(1); else pauseProgress(); }
+function prev(){ if(cur > 0) navigate(-1); else pauseProgress(); }
 
 document.addEventListener('visibilitychange', ()=>{
   if(document.hidden) pauseProgress();
@@ -600,15 +618,16 @@ function tick(){
 tick(); setInterval(tick,1000);
 
 // ── Share ──
-async function shareLinkFallback(e){ if(e){e.stopPropagation();pauseProgress();}
+async function shareLinkFallback(e){ if(e){e.preventDefault();e.stopPropagation();pauseProgress();}
+  isBusy = true;
   const data={ title:'5° Encontro de Jovens — Acrelândia/AC',
     text:'🔥 Santificai-vos na Palavra (João 17:17)\n📅 18 de Julho · Assembleia de Deus da Missão · Acrelândia/AC\nVem fazer parte!',
     url:'https://mrjohnpaixao.github.io/4-Encontro_de_Jovens/' };
   if(navigator.share){ try{ await navigator.share(data);} catch(_){} }
   else{ navigator.clipboard.writeText(data.url).then(()=>alert('Link copiado! Cole no WhatsApp ou Instagram.')); }
-  resumeProgress();
+  isBusy = false;
 }
-function goToMain(e){ if(e)e.stopPropagation(); window.open('index.html','_blank'); }
+function goToMain(e){ if(e){e.preventDefault();e.stopPropagation();} pauseProgress(); window.open('index.html','_blank'); }
 
 const storyFiles = ['assets/stories/story-1.png','assets/stories/story-2.png','assets/stories/story-3.png'];
 
@@ -629,8 +648,10 @@ function downloadUrl(url){
 }
 
 async function shareStory(e){
-  if(e) e.stopPropagation();
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+  if(isBusy) return;
   pauseProgress();
+  isBusy = true;
   try{
     const file = await currentStoryFile();
     if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -645,14 +666,16 @@ async function shareStory(e){
   }catch(_){
     downloadUrl(storyFiles[cur] || storyFiles[0]);
   }
-  resumeProgress();
+  isBusy = false;
 }
 
 function downloadStory(e){
-  if(e) e.stopPropagation();
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+  if(isBusy) return;
   pauseProgress();
+  isBusy = true;
   downloadUrl(storyFiles[cur] || storyFiles[0]);
-  resumeProgress();
+  window.setTimeout(()=>{ isBusy = false; }, 350);
 }
 </script>
 </body>
