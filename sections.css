@@ -73,6 +73,7 @@
 .hero-title .num{
   font-family:var(--display);
   font-size:clamp(7rem,26vw,24rem);
+  position:relative; top:.12em;
   background:linear-gradient(180deg,#fff 30%, var(--cyan-soft));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 10px 40px color-mix(in oklab,var(--tw-cyan) 30%, transparent));
@@ -143,7 +144,7 @@
 @keyframes cue{ 0%,100%{ transform:translateY(0); opacity:.4;} 50%{ transform:translateY(8px); opacity:1;} }
 @keyframes numberFloat{
   0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(-8px); }
+  50%{ transform:translateY(-6px); }
 }
 @keyframes ctaBreath{
   0%,100%{ box-shadow:0 14px 40px -12px color-mix(in oklab,var(--tw-flame) 70%, transparent); }
@@ -163,7 +164,7 @@
     width:min(100%, 1120px);
     transform:translateY(-.2rem);
   }
-  .hero-title .num{ font-size:clamp(9rem,18vw,18.5rem); }
+  .hero-title .num{ font-size:clamp(9rem,18vw,18.5rem); top:.18em; }
   .hero-title .deg{ font-size:clamp(2.7rem,5vw,4.8rem); }
   .hero-title .word{ font-size:clamp(4.2rem,8vw,8.4rem); }
   .hero-title .jovens{
@@ -177,7 +178,7 @@
 
 @media (min-width:1500px){
   .hero-title{ transform:translateY(-.45rem); }
-  .hero-title .num{ font-size:17.2rem; }
+  .hero-title .num{ font-size:17.2rem; top:.2em; }
   .hero-title .word{ font-size:7.8rem; }
   .hero-title .jovens{ font-size:9.6rem; }
 }
@@ -468,7 +469,7 @@
     animation-duration:1.8s, 4.8s, 3.6s;
   }
   .hero-top{ margin-bottom:.8rem; gap:.7rem; flex-wrap:wrap; }
-  .hero-title .num{ font-size:clamp(6.2rem,32vw,8.8rem); }
+  .hero-title .num{ font-size:clamp(6.2rem,32vw,8.8rem); top:.1em; }
   .hero-title .num{ animation:numberFloat 4.2s ease-in-out infinite; }
   .hero-title .deg{ font-size:clamp(2rem,8vw,2.8rem); }
   .hero-title .word{ font-size:clamp(2.3rem,13vw,4rem); }
